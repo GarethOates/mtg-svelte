@@ -1,22 +1,32 @@
 <script>
 	import Card from './card.svelte';
+	import { onMount } from 'svelte';
 
 	let url = 'https://api.magicthegathering.io/v1/sets/';
-	let cardPromise = fetch(url);
 
+	let totalPrice;
 	let selectedSet;
 	let booster;
-	let totalPrice = 0;
+	let cardSets;
 
-	$: boosterUrl = url + selectedSet + '/booster';
+	onMount(async() => {
+		let cardPromise = await fetch(url);
+		cardSets = await cardPromise.json();
+	});
 
 	async function fetchBooster() {
-		booster = await fetch(boosterUrl);
+		booster = undefined;
+		totalPrice = 0;
+		let boosters = await fetch(boosterUrl);
+		booster = await boosters.json();
 	}
 
 	function sumPrice(event) {
 		totalPrice += parseFloat(event.detail);
 	}
+
+	$: boosterUrl = url + selectedSet + '/booster';
+	$: totalPriceLabel = parseFloat(totalPrice).toFixed(2);
 </script>
 
 <style>
@@ -25,41 +35,33 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 	}
-
 </style>
 
 <h1>Magic: The Gathering Booster Generator</h1>
 <p>Please choose from the following sets to generate a booster pack:</p>
 
-{#await cardPromise}
+{#if !cardSets}
 	<p>Loading Sets...</p>
-{:then cardPromise}
-	{#await cardPromise.json()}
-	{:then cardsets}
-		<select bind:value={selectedSet}>
-			<option value=''>Please Choose...</option>
-			{#each cardsets.sets as cardset}
-				<option value={cardset.code}>{cardset.name}</option>
-			{/each}
-		</select>
-
-		{#if selectedSet}
-			<p><button on:click={fetchBooster}>Generate Booster</button></p>
-			{#if booster}
-				{#await booster.json()}
-				{:then booster}
-					{#if booster.cards}
-						<p>Total value: ${parseFloat(totalPrice).toFixed(2)}</p>
-						<div class="container">
-						{#each booster.cards as card}
-								<Card card={card} on:price={sumPrice} />
-						{/each}
-						</div>
-					{:else}
-						<p>No cards available from this set.</p>
-					{/if}
-				{/await}
+{:else}
+	<select bind:value={selectedSet}>
+		<option value=''>Please Choose...</option>
+		{#each cardSets.sets as cardset}
+			<option value={cardset.code}>{cardset.name}</option>
+		{/each}
+	</select>
+	{#if selectedSet}
+		<p><button on:click={fetchBooster}>Generate Booster</button></p>
+		{#if booster}
+			{#if booster.cards}
+				<p>Total value: ${totalPriceLabel}</p>
+				<div class="container">
+				{#each booster.cards as card}
+						<Card card={card} on:price={sumPrice} />
+				{/each}
+				</div>
+			{:else}
+				<p>No boosters available</p>
 			{/if}
 		{/if}
-	{/await}
-{/await}
+	{/if}
+{/if}

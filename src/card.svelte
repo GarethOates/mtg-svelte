@@ -2,9 +2,9 @@
 	import { onMount, createEventDispatcher } from 'svelte';
 
 	export let card;
-	let price;
-
 	const dispatch = createEventDispatcher();
+
+	let price;
 
 	onMount(async() => {
 		let details = await fetch('https://api.scryfall.com/cards/search?order=name&q=!"' + card.name + '"');
