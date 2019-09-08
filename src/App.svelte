@@ -15,9 +15,12 @@
 	});
 
 	async function fetchBooster() {
+		let boosters;
+
 		booster = undefined;
 		totalPrice = 0;
-		let boosters = await fetch(boosterUrl);
+
+		boosters = await fetch(boosterUrl);
 		booster = await boosters.json();
 	}
 
