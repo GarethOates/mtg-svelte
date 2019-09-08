@@ -12,6 +12,8 @@
 	onMount(async() => {
 		let cardPromise = await fetch(url);
 		cardSets = await cardPromise.json();
+
+		cardSets = cardSets.sets.sort((a, b) => (a.name > b.name) ? 1 : -1);
 	});
 
 	async function fetchBooster() {
@@ -48,7 +50,7 @@
 {:else}
 	<select bind:value={selectedSet}>
 		<option value=''>Please Choose...</option>
-		{#each cardSets.sets as cardset}
+		{#each cardSets as cardset}
 			<option value={cardset.code}>{cardset.name}</option>
 		{/each}
 	</select>
