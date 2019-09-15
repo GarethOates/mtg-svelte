@@ -7,7 +7,7 @@
 <p>Selected Cards ({cardList.length}/{maxCards}):</p>
 	<ul>
 		{#each cardList as card}
-			<li>{card.name} - {card.type} - {card.manaCost}</li>
+			<li>{card.name} - {card.type} {#if card.manaCost}- {card.manaCost}{/if}</li>
 		{/each}
 	</ul>
 </div>
