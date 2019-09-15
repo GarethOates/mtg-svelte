@@ -59,7 +59,7 @@
 	}
 </style>
 
-<h1>Magic: The Gathering Booster Generator</h1>
+<h1>Magic: The Gathering Draft Simulator</h1>
 <p>Please choose from the following sets to generate a booster pack:</p>
 
 {#if !cardSets}
@@ -87,4 +87,6 @@
 		{/if}
 	{/if}
 {/if}
-<CardList cardList={selectedCards} maxCards={MAX_CARDS}></CardList>
+{#if selectedCards.length > 0}
+	<CardList cardList={selectedCards} maxCards={MAX_CARDS}></CardList>
+{/if}
