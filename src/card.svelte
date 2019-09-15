@@ -16,6 +16,10 @@
 			dispatch('price', price);
 		}
 	});
+
+	function cardSelected() {
+		dispatch('click', card);
+	}
 </script>
 
 <style>
@@ -34,6 +38,8 @@
 </style>
 
 <div>
-	<img alt='image of {card.name}' src='{card.imageUrl}'>
+	<div on:click={cardSelected}>
+		<img alt='image of {card.name}' src='{card.imageUrl}'>
+	</div>
 	{#if price}<p>${price}</p>{/if}
 </div>

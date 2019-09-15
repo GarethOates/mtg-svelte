@@ -1,6 +1,9 @@
 <script>
 	import Card from './card.svelte';
+	import CardList from './List.svelte';
 	import { onMount } from 'svelte';
+
+	const MAX_CARDS = 15;
 
 	let url = 'https://api.magicthegathering.io/v1/sets/';
 
@@ -30,8 +33,22 @@
 		totalPrice += parseFloat(event.detail);
 	}
 
+	async function cardSelected(event) {
+		console.log(event.detail);
+
+		if (selectedCards.length < MAX_CARDS) {
+			selectedCards = [
+				...selectedCards,
+				event.detail
+			]
+
+			await fetchBooster();
+		}
+	}
+
 	$: boosterUrl = url + selectedSet + '/booster';
 	$: totalPriceLabel = parseFloat(totalPrice).toFixed(2);
+	$: selectedCards = [];
 </script>
 
 <style>
@@ -61,7 +78,7 @@
 				<p>Total value: ${totalPriceLabel}</p>
 				<div class="container">
 				{#each booster.cards as card}
-						<Card card={card} on:price={sumPrice} />
+						<Card card={card} on:price={sumPrice} on:click={cardSelected} />
 				{/each}
 				</div>
 			{:else}
@@ -70,3 +87,4 @@
 		{/if}
 	{/if}
 {/if}
+<CardList cardList={selectedCards} maxCards={MAX_CARDS}></CardList>
