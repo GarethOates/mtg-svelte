@@ -6,7 +6,7 @@
 	const dispatch = createEventDispatcher();
 
 	function cardSelected() {
-		dispatch('click', card);
+		dispatch('selected', card);
 	}
 </script>
 
