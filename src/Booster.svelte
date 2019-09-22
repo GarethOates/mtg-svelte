@@ -1,6 +1,7 @@
 <script>
 	import Card from './Card.svelte';
-	import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
+  import { mtgStore } from './stores/store.js';
 
 	const dispatch = createEventDispatcher();
 
@@ -28,7 +29,9 @@
 
 		booster = undefined;
 		boosters = await fetch(boosterUrl);
-		booster = await boosters.json();
+    booster = await boosters.json();
+
+    $mtgStore.currentBooster = booster.cards;
 
 		fetching = false;
 	}
@@ -36,12 +39,15 @@
 	async function cardSelected(event) {
 		dispatch('cardSelected', event.detail);
 
-		if (selectedCards.length < maxCards) {
+		if ($mtgStore.selectedCards.length < maxCards) {
 			await fetchBooster();
-		}
+    }
+    else {
+      $mtgStore.currentBooster = [];
+    }
 	}
 
-	$: boosterUrl = url + selectedSet + '/booster';
+	$: boosterUrl = url + $mtgStore.selectedSetCode + '/booster';
 	$: selectedCardsLength = selectedCards.length;
 </script>
 
@@ -64,13 +70,14 @@
 </div>
 <p>Loading Sets...</p>
 {:else}
-	<select bind:value={selectedSet} disabled={selectedCardsLength}>
+	<select bind:value={$mtgStore.selectedSetCode} disabled={selectedCardsLength}>
 		<option value='' selected>Please Choose...</option>
 		{#each cardSets as cardset}
 			<option value={cardset.code}>{cardset.name}</option>
 		{/each}
 	</select>
-	{#if selectedSet}
+	{#if $mtgStore.selectedSetCode}
+    <p>Selected Set Code: {$mtgStore.selectedSetCode}
 		<p>
 			<button
 				class="btn btn-primary"
@@ -86,10 +93,10 @@
 			<p>Loading Booster Pack...</p>
 		{:else}
 		{#if booster}
-			{#if booster.cards}
+			{#if $mtgStore.currentBooster}
 				<h2>Select card {selectedCardsLength + 1}</h2>
 				<div class="container">
-				{#each booster.cards as card}
+				{#each $mtgStore.currentBooster as card}
 						<Card card={card} on:selected={cardSelected} />
 				{/each}
 				</div>
