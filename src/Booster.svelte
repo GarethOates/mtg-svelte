@@ -1,5 +1,5 @@
 <script>
-	import Card from './card.svelte';
+	import Card from './Card.svelte';
 	import { onMount, createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -34,9 +34,9 @@
 	}
 
 	async function cardSelected(event) {
-		if (selectedCards.length < maxCards) {
-			dispatch('cardSelected', event.detail);
+		dispatch('cardSelected', event.detail);
 
+		if (selectedCards.length < maxCards) {
 			await fetchBooster();
 		}
 	}
@@ -51,11 +51,18 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 	}
+
+	button {
+		margin-top: 5px;
+	}
 </style>
 
 <p>Please choose from the following sets to generate a booster pack:</p>
 {#if !cardSets}
-		<p>Loading Sets...</p>
+<div class="spinner-border" role="status">
+  <span class="sr-only"></span>
+</div>
+<p>Loading Sets...</p>
 {:else}
 	<select bind:value={selectedSet} disabled={selectedCardsLength}>
 		<option value='' selected>Please Choose...</option>
@@ -66,13 +73,17 @@
 	{#if selectedSet}
 		<p>
 			<button
+				class="btn btn-primary"
 				on:click={fetchBooster}
 				disabled={selectedCardsLength}>
 				Generate Booster
 			</button>
 		</p>
 		{#if fetching}
-			<p>Loading booster pack...</p>
+			<div class="spinner-border" role="status">
+				<span class="sr-only"></span>
+			</div>
+			<p>Loading Booster Pack...</p>
 		{:else}
 		{#if booster}
 			{#if booster.cards}

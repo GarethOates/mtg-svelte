@@ -13,6 +13,12 @@
 <style>
 	img {
 			padding: 0px 25px 0px 0px;
+			transition: all .1s ease-in-out;
+			cursor: pointer;
+	}
+
+	img:hover {
+		transform: scale(1.1);
 	}
 
 	div {
