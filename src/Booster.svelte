@@ -60,7 +60,7 @@
 <p>Please choose from the following sets to generate a booster pack:</p>
 {#if !cardSets}
 <div class="spinner-border" role="status">
-  <span class="sr-only"></span>
+  <span class="sr-only">Loading...</span>
 </div>
 <p>Loading Sets...</p>
 {:else}
@@ -81,7 +81,7 @@
 		</p>
 		{#if fetching}
 			<div class="spinner-border" role="status">
-				<span class="sr-only"></span>
+				<span class="sr-only">Loading...</span>
 			</div>
 			<p>Loading Booster Pack...</p>
 		{:else}

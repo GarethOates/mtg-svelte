@@ -2,19 +2,17 @@
 	import CardList from './List.svelte';
 	import Booster from './Booster.svelte';
 
-	import { onMount } from 'svelte';
-
-	const MAX_CARDS = 15;
+	const MAX_CARDS = 2;
 	let selectedCards = [];
 
-  async function cardSelected(event) {
-    if (selectedCards.length < MAX_CARDS) {
-      selectedCards = [
-        ...selectedCards,
-        event.detail
-      ]
-    }
-  }
+	function cardSelected(event) {
+		if (selectedCards.length < MAX_CARDS) {
+			selectedCards = [
+				...selectedCards,
+				event.detail
+			]
+		}
+	}
 </script>
 
 <style>
