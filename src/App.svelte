@@ -1,7 +1,7 @@
 <script>
+	import { mtgStore } from './stores/store.js';
 	import CardList from './List.svelte';
-  import Booster from './Booster.svelte';
-  import { mtgStore } from './stores/store.js';
+	import Booster from './Booster.svelte';
 
 	const MAX_CARDS = 2;
 
@@ -10,7 +10,7 @@
 			$mtgStore.selectedCards = [
 				...$mtgStore.selectedCards,
 				event.detail
-			]
+			];
 		}
 	}
 </script>
@@ -28,12 +28,11 @@
 		<h1>Magic: The Gathering Draft Simulator</h1>
 		<Booster
 			maxCards={MAX_CARDS}
-			selectedCards={$mtgStore.selectedCards}
 			on:cardSelected={cardSelected}
 		/>
 	</div>
 
 	<div>
-		<CardList cardList={$mtgStore.selectedCards} maxCards={MAX_CARDS}></CardList>
+		<CardList maxCards={MAX_CARDS}></CardList>
 	</div>
 </div>

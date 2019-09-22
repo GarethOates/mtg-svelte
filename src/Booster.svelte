@@ -1,11 +1,10 @@
 <script>
 	import Card from './Card.svelte';
-  import { onMount, createEventDispatcher } from 'svelte';
-  import { mtgStore } from './stores/store.js';
+	import { onMount, createEventDispatcher } from 'svelte';
+	import { mtgStore } from './stores/store.js';
 
 	const dispatch = createEventDispatcher();
 
-	export let selectedCards;
 	export let maxCards;
 
 	let url = 'https://api.magicthegathering.io/v1/sets/';
@@ -26,29 +25,32 @@
 		let boosters;
 
 		fetching = true;
-
-		booster = undefined;
 		boosters = await fetch(boosterUrl);
-    booster = await boosters.json();
+		booster = await boosters.json();
 
-    $mtgStore.currentBooster = booster.cards;
+		$mtgStore.currentBooster = booster.cards;
 
 		fetching = false;
-	}
+  }
+
+  function reset() {
+    mtgStore.reset();
+    console.log($mtgStore.selectedCards);
+  }
 
 	async function cardSelected(event) {
 		dispatch('cardSelected', event.detail);
 
 		if ($mtgStore.selectedCards.length < maxCards) {
 			await fetchBooster();
-    }
-    else {
-      $mtgStore.currentBooster = [];
-    }
+		}
+		else {
+			$mtgStore.currentBooster = [];
+		}
 	}
 
-	$: boosterUrl = url + $mtgStore.selectedSetCode + '/booster';
-	$: selectedCardsLength = selectedCards.length;
+  $: boosterUrl = url + $mtgStore.selectedSetCode + '/booster';
+  $: simFinished = $mtgStore.selectedCards.length == maxCards;
 </script>
 
 <style>
@@ -66,26 +68,32 @@
 <p>Please choose from the following sets to generate a booster pack:</p>
 {#if !cardSets}
 <div class="spinner-border" role="status">
-  <span class="sr-only">Loading...</span>
+	<span class="sr-only">Loading...</span>
 </div>
 <p>Loading Sets...</p>
 {:else}
-	<select bind:value={$mtgStore.selectedSetCode} disabled={selectedCardsLength}>
+	<select bind:value={$mtgStore.selectedSetCode} disabled={$mtgStore.selectedCards.length}>
 		<option value='' selected>Please Choose...</option>
 		{#each cardSets as cardset}
 			<option value={cardset.code}>{cardset.name}</option>
 		{/each}
 	</select>
 	{#if $mtgStore.selectedSetCode}
-    <p>Selected Set Code: {$mtgStore.selectedSetCode}
-		<p>
+		<div>
 			<button
 				class="btn btn-primary"
 				on:click={fetchBooster}
-				disabled={selectedCardsLength}>
+				disabled={$mtgStore.selectedCards.length}>
 				Generate Booster
 			</button>
-		</p>
+      {#if simFinished}
+			<button
+				class="btn btn-primary"
+				on:click={reset}>
+				Reset
+			</button>
+      {/if}
+		</div>
 		{#if fetching}
 			<div class="spinner-border" role="status">
 				<span class="sr-only">Loading...</span>
@@ -94,7 +102,11 @@
 		{:else}
 		{#if booster}
 			{#if $mtgStore.currentBooster}
-				<h2>Select card {selectedCardsLength + 1}</h2>
+				{#if simFinished}
+					<h2>Simulation Complete</h2>
+				{:else}
+					<h2>Select card {$mtgStore.selectedCards.length + 1}</h2>
+				{/if}
 				<div class="container">
 				{#each $mtgStore.currentBooster as card}
 						<Card card={card} on:selected={cardSelected} />

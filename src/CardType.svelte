@@ -1,8 +1,8 @@
 <script>
-  export let cardList = [];
-  export let type = "";
+import { mtgStore } from './stores/store.js';
+export let type = "";
 
-  $: count = cardList.filter(containsType(type)).length;
+  $: count = $mtgStore.selectedCards.filter(containsType(type)).length;
 
   function containsType(type) {
     return function(card) {
