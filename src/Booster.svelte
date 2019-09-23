@@ -31,12 +31,16 @@
 		$mtgStore.currentBooster = booster.cards;
 
 		fetching = false;
-  }
+	}
 
-  function reset() {
-    mtgStore.reset();
-    console.log($mtgStore.selectedCards);
-  }
+	// Need to move this out into the Store.
+	function reset() {
+		$mtgStore.selectedCards = [];
+		$mtgStore.selectedSetCode = "";
+		$mtgStore.currentBooster = [];
+
+		console.log($mtgStore.selectedCards);
+	}
 
 	async function cardSelected(event) {
 		dispatch('cardSelected', event.detail);
@@ -49,8 +53,8 @@
 		}
 	}
 
-  $: boosterUrl = url + $mtgStore.selectedSetCode + '/booster';
-  $: simFinished = $mtgStore.selectedCards.length == maxCards;
+	$: boosterUrl = url + $mtgStore.selectedSetCode + '/booster';
+	$: simFinished = $mtgStore.selectedCards.length == maxCards;
 </script>
 
 <style>
@@ -86,13 +90,13 @@
 				disabled={$mtgStore.selectedCards.length}>
 				Generate Booster
 			</button>
-      {#if simFinished}
+			{#if simFinished}
 			<button
 				class="btn btn-primary"
 				on:click={reset}>
 				Reset
 			</button>
-      {/if}
+			{/if}
 		</div>
 		{#if fetching}
 			<div class="spinner-border" role="status">

@@ -7,14 +7,13 @@ const initialState = {
 }
 
 function createStore() {
-  const { subscribe, set, update } = writable(initialState);
+	const { subscribe, set, update } = writable(initialState);
 
-  return {
-    subscribe,
-    set,
-    update,
-    reset: () => set(initialState)
-  };
+	return {
+		subscribe,
+		set,
+		update
+	};
 }
 
 export const mtgStore = createStore();
