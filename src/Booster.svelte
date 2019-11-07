@@ -65,7 +65,7 @@
 	}
 
 	button {
-		margin-top: 5px;
+		margin-top: 10px;
 	}
 </style>
 
@@ -113,7 +113,7 @@
 				{/if}
 				<div class="container">
 				{#each $mtgStore.currentBooster as card}
-						<Card card={card} on:selected={cardSelected} />
+					<Card card={card} on:selected={cardSelected} />
 				{/each}
 				</div>
 			{:else}

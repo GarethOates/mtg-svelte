@@ -2,17 +2,17 @@
 import { mtgStore } from './stores/store.js';
 export let type = "";
 
-  $: count = $mtgStore.selectedCards.filter(containsType(type)).length;
+	$: count = $mtgStore.selectedCards.filter(containsType(type)).length;
 
-  function containsType(type) {
-    return function(card) {
-      return card.type.toLowerCase().includes(type);
-    }
-  }
+	function containsType(type) {
+		return function(card) {
+			return card.type.toLowerCase().includes(type);
+		}
+	}
 
-  function capitalise(word) {
-    return word[0].toUpperCase() + word.slice(1);
-  }
+	function capitalise(word) {
+		return word[0].toUpperCase() + word.slice(1);
+	}
 
 </script>
 

@@ -1,6 +1,6 @@
 <script>
-  import CardType from './CardType.svelte';
-  import { mtgStore } from './stores/store.js';
+	import CardType from './CardType.svelte';
+	import { mtgStore } from './stores/store.js';
 
 	export let maxCards = 0;
 </script>
